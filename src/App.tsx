@@ -35,16 +35,30 @@ export const App: React.FC = () => {
     });
   };
 
-  const { currentStepIndex, steps, step, isFirstStep, isLastStep, back, next } =
-    useMultistepForm([
-      <UseForm {...data} updateFields={updateFields} />,
-      <AddressForm {...data} updateFields={updateFields} />,
-      <AccountForm {...data} updateFields={updateFields} />,
-    ]);
+  const {
+    currentStepIndex,
+    steps,
+    step,
+    isFirstStep,
+    isLastStep,
+    back,
+    next,
+    goTo,
+  } = useMultistepForm([
+    <UseForm {...data} updateFields={updateFields} />,
+    <AddressForm {...data} updateFields={updateFields} />,
+    <AccountForm {...data} updateFields={updateFields} />,
+  ]);
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    next();
+    if (!isLastStep) {
+      return next();
+    }
+
+    alert('Successful Account Creation');
+    setData(INITIAL_DATA);
+    goTo(0);
   };
 
   return (
@@ -57,6 +71,7 @@ export const App: React.FC = () => {
         margin: '1rem',
         borderRadius: '.5rem',
         fontFamily: 'Arial',
+        maxWidth: 'max-content',
       }}
     >
       <form onSubmit={onSubmit}>
